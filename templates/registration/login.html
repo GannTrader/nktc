@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<hr>
+<hr>
+<div class="container mt-5" style="height:600px">
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-danger" value="Login">
+                <br>
+                <br>
+                <p><a href="{% url 'password-reset' %}">Quên mật khẩu ?</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<hr>
+<hr>
+<div class="container mt-5 text-center" style="height:600px">
+    <div class="card">
+        <div class="card-body">
+            <p>Đăng xuất thành công! Cảm ơn bạn đã giành thời gian cho web và mong sớm gặp lại bạn.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary font-weight-bold">Bạn có thể đăng nhập lại ngay</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
