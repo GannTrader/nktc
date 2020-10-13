@@ -5,9 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
-          content="Học đầu tư và giao dịch tài chính online từ Minh Thắng, đăng nhập tài khoản bạn có thể học giao dịch ngoại hối, forex, crypto bất cứ lúc nào và nơi đâu miễn là có internet">
+          content="{% block description %}{% endblock %}">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="robots" content="index, follow">
     <title>{% block title %}{% endblock %}</title>
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -17,10 +19,22 @@
     <!-- Your custom styles (optional) -->
     <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
     <link rel="icon" type="image/png" href="/media/favicon.png"/>
-    <link rel="canonical" href="">
+
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body>
+{% if messages %}
+<hr>
+<hr>
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible mt-5 container">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>{{ message }}</strong>
+</div>
+{% endfor %}
+{% endif %}
 
 <!--Main Navigation-->
 <header>
@@ -51,7 +65,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link waves-effect" href="{% url 'post' %}">Blog</a>
+                        <a class="nav-link waves-effect" href="{% url 'post' %}">Blog chia sẻ</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
@@ -68,16 +82,22 @@
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link waves-effect" href="{% url 'course' %}"
-                           >Khóa học</a>
+                        >Khóa học</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link waves-effect" href=""
-                           >Phân tích hàng tuần</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Phân tích hàng tuần
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Forex</a>
+                            <a class="dropdown-item" href="#">Tradecoin</a>
+                            <a class="dropdown-item" href="#">Chiêm tinh</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link waves-effect" href=""
-                           >Liên hệ</a>
+                        >Liên hệ</a>
                     </li>
                 </ul>
 
@@ -89,7 +109,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://www.youtube.com/channel/UCjVjEVzoM8vzHUlDtpm5CHQ" class="nav-link waves-effect" target="_blank">
+                        <a href="https://www.youtube.com/channel/UCjVjEVzoM8vzHUlDtpm5CHQ" class="nav-link waves-effect"
+                           target="_blank">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </li>
@@ -102,14 +123,14 @@
                     <li class="nav-item mr-2">
                         <a href="{% url 'login' %}"
                            class="nav-link border border-light rounded waves-effect"
-                           >
+                        >
                             <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{% url 'register' %}"
                            class="nav-link border border-light rounded waves-effect"
-                           >
+                        >
                             <i class="far fa-registered mr-2"></i>Đăng ký
                         </a>
                     </li>
@@ -117,14 +138,14 @@
                     <li class="nav-item mr-2">
                         <a href="{% url 'profile' %}"
                            class="nav-link border border-light rounded waves-effect"
-                           >
+                        >
                             <i class="far fa-question-circle mr-2"></i>Thông tin tài khoản
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{% url 'logout' %}"
                            class="nav-link border border-light rounded waves-effect"
-                           >
+                        >
                             <i class="fas fa-sign-out-alt"></i>Đăng xuất
                         </a>
                     </li>
@@ -139,6 +160,7 @@
 
 </header>
 <!--Main Navigation-->
+
 
 {% block content %}
 
@@ -205,6 +227,10 @@
     // Animations initialization
     new WOW().init();
 
+    function ReplyCmt(id){
+        event.preventDefault();
+        document.getElementById("showForm_"+id).innerHTML = "<input type='text' name='replyCmt' class='form-control'><input type='submit' class='btn btn-info btn-sm' value='post'>"
+    }
 
 
 

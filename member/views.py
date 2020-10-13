@@ -14,9 +14,10 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 
-from member.forms import SignupForm
+from member.forms import SignupForm, EditProfileForm
+from member.models import Student
 from member.tokens import account_activation_token
 from django.utils.translation import gettext, gettext_lazy as _
 
@@ -82,6 +83,14 @@ class SiteLoginView(LoginView):
 class ProfileView(TemplateView):
     template_name = "registration/profile.html"
 
+
+class EditProfileView(UpdateView):
+    template_name = "registration/edit_profile.html"
+    form_class = EditProfileForm
+    success_url = reverse_lazy("profile")
+
+    def get_object(self, queryset=None):
+        return Student.objects.get(pk=self.kwargs['pk'])
 
 class SiteLogoutView(LogoutView):
     template_name = "registration/logout.html"

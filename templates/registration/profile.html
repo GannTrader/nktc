@@ -2,16 +2,34 @@
 {% block content %}
 <hr>
 <hr>
-<div class="container mt-5" style="height:600px">
+<div class="container mt-5" style="height:650px">
     <div class="card">
         <div class="card-body">
-            <p>Chào {{ user.username }}!</p>
-            <p>Dưới đây là thông tin tài khoản của bạn:</p>
-            <ul>
-                <li>Email: {{ user.email }}</li>
-                <li>Lần cuối cùng đăng nhập: {{ user.last_login }}</li>
-            </ul>
-            <p><a href="" class="btn btn-primary">Chỉnh sửa lại thông tin</a></p>
+            <h2>Chào {{ user.username }}!</h2>
+            <br>
+            <p>Đăng nhập lần cuối vào: {{ user.last_login }}</p>
+            <p>Ngày tham gia: {{ user.date_joined }}</p>
+            <hr>
+            <h2>Dưới đây là thông tin tài khoản của bạn:</h2>
+            <hr>
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td>Email</td>
+                    <td>Avatar</td>
+                    <td>Address</td>
+                    <td>Phone</td>
+                </tr>
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td><img src="/media/{{ user.tagUser.avatar }}" alt="" width="100px" class="img-thumbnail"></td>
+                    <td>{{ user.tagUser.address }}</td>
+                    <td>{{ user.tagUser.phone }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <hr>
             <p><a href="{% url 'password-change' %}" class="btn btn-danger">Đổi mật khẩu</a></p>
         </div>
     </div>

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATICFILES_DIRS = [
@@ -43,6 +44,9 @@ INSTALLED_APPS = [
     'member',
     'course',
     'post',
+    'phonenumber_field',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -127,12 +131,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
 
-
+#send email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 
@@ -143,4 +147,14 @@ EMAIL_HOST_PASSWORD = 'mypassword'
 EMAIL_USE_TLS = True
 
 
+#after login
 LOGIN_REDIRECT_URL = 'profile'
+
+
+#login with email
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'member.EmailLoginBackend.MyEmailRegister',
+]
+
+CKEDITOR_UPLOAD_PATH = "uploads/"

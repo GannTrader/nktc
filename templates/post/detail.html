@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}{{object.title}}{% endblock %}
+{% block canonical %}{{ request.path }}{% endblock %}
+{% block description %}{{object.description}}{% endblock %}
+
+{% block head %}
+<link rel="canonical" href="http://127.0.0.1:8000/{{object.slug}}">
+
+<!--openGarp Facebook-->
+<meta property="og:title" content="{{object.title}}">
+<meta property="og:description" content="{{object.description}}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://127.0.0.1:8000/{{ request.path }}">
+<meta property="og:image" content="http://127.0.0.1:8000/media/{{object.image}}">
+
+<!--Twitter-->
+<meta name="twitter:title" content="{{object.title}}">
+<meta name="twitter:description" content="{{object.description}}">
+<meta name="twitter:image" content="http://127.0.0.1:8000/media/{{object.image}}">
+<meta name="twitter:card" content="summary">
+{% endblock %}
+
+{% block content %}
+
+<!--Main layout-->
+<main class="mt-5 pt-5">
+    <div class="container">
+
+        <!--Section: Post-->
+        <section class="mt-4">
+
+            <!--Grid row-->
+            <div class="row">
+
+                <!--Grid column-->
+                <div class="col-md-8 mb-4">
+
+                    <!--Featured Image-->
+                    <div class="card mb-4 wow fadeIn">
+
+                        <img src="/media/{{object.image}}" class="img-fluid" alt="">
+
+                    </div>
+                    <!--/.Featured Image-->
+
+                    <!--Card Content-->
+                    <div class="card mb-4 wow fadeIn">
+                        <!--Card content-->
+                        <div class="card-body">
+                            <p class="h1 my-4" style="font-size: 1.8rem">{{ object.title }}</p>
+                            <p class="">{{ object.created_at }}</p>
+                            <blockquote class="blockquote">
+                                <p class="mb-0">{{ object.description }}</p>
+                            </blockquote>
+                            <p>{{object.body|safe}}</p>
+                        </div>
+                    </div>
+                    <!--/.Card-->
+
+                    <!--Reply-->
+                    {% if user.is_authenticated %}
+                    <div class="card mb-3 wow fadeIn">
+                        <div class="card-header font-weight-bold text-uppercase">ý kiến của bạn</div>
+                        <div class="card-body">
+
+                            <!-- Default form reply -->
+                            <form method="post" action="{% url 'cmt' object.slug %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <textarea class="form-control" name="comment" rows="5"></textarea>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-info btn-md" type="submit">Post</button>
+                                </div>
+                            </form>
+                            <!-- Default form reply -->
+                        </div>
+                    </div>
+                    {% else %}
+                    <hr>
+                    <a href="{% url 'login' %}" class="font-weight-bold">Login to Comment</a>
+                    <hr>
+                    {% endif %}
+                    <!--/.Reply-->
+
+                    <!--Comments-->
+                    {% if comments %}
+                    <div class="card card-comments mb-3 wow fadeIn">
+                        <div class="card-header font-weight-bold">{{ comments.count }} comment{{ comments|pluralize }}
+                        </div>
+                        <div class="card-body">
+                            {% for cmt in comments %}
+                            <div class="media d-block d-md-flex mt-4">
+                                {% if cmt.user.tag.avatar %}
+                                <img class="d-flex mb-3 mx-auto "
+                                     src="/media/{{ cmt.user.tagUser.avatar }}"
+                                     alt="Generic placeholder image">
+                                {% else %}
+                                <img class="d-flex mb-3 mx-auto "
+                                     src="/media/default-avatar.jpg"
+                                     alt="Generic placeholder image">
+                                {% endif %}
+                                <div class="media-body text-center text-md-left ml-md-3 ml-0">
+                                    <h5 class="mt-0 font-weight-bold">{{ cmt.user.username }} -- {{ cmt.created_at }}
+                                        <a href="" class="pull-right">
+                                            <i class="fas fa-reply" onclick="ReplyCmt({{cmt.pk}})"></i>
+                                        </a>
+                                    </h5>{{ cmt.comment }}
+                                    <form action="{% url 'reply' cmt.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <p id="showForm_{{cmt.pk}}"></p>
+                                    </form>
+
+                                    {% if cmt.reply_set.all %}
+                                    {% for reply in cmt.reply_set.all %}
+                                    {% if reply.status == 'active' %}
+                                    <div class="media d-block d-md-flex mt-3">
+                                        {% if reply.user.tagUser.avatar %}
+                                        <img class="d-flex mb-3 mx-auto "
+                                             src="/media/{{ user.tagUser.avatar }}"
+                                             alt="Generic placeholder image">
+                                        {% else %}
+                                        <img class="d-flex mb-3 mx-auto "
+                                             src="/media/default-avatar.jpg"
+                                             alt="Generic placeholder image">
+                                        {% endif %}
+                                        <div class="media-body text-center text-md-left ml-md-3 ml-0">
+                                            <h5 class="mt-0 font-weight-bold">{{ reply.user.username }}-- {{cmt.created_at }}
+                                            </h5>
+                                            {{ reply.reply }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!--/.Comments-->
+
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-4 mb-4">
+                    {% if related_post %}
+
+                    <!--Card-->
+                    <div class="card mb-4 wow fadeIn">
+
+                        <div class="card-header">Bài viết liên quan</div>
+
+                        <!--Card content-->
+                        <div class="card-body">
+
+                            <ul class="list-unstyled">
+                                {% for rpost in related_post %}
+                                <li class="media">
+                                    <img class="d-flex mr-3"
+                                         src="/media/{{ rpost.image }}"
+                                         alt="Generic placeholder image" width="30%">
+                                    <div class="media-body">
+                                        <a href="{% url 'detail' rpost.slug %}">
+                                            <h5 class="mt-0 mb-1 font-weight-bold">{{ rpost.title}}</h5>
+                                        </a>
+                                        {{rpost.description|truncatechars:70}}
+                                    </div>
+                                </li>
+                                <hr>
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    <!--/.Card-->
+                    {% endif %}
+
+                </div>
+                <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Post-->
+
+    </div>
+</main>
+<!--Main layout-->
+{% endblock %}
